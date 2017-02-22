@@ -14,15 +14,22 @@ app.config.from_object(configuration['default'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-from app import models
-from app.views import *
+from app.models import models
+from app.users.views import *
+from app.bucketlists.views import *
 
+# registration
 api.add_resource(RegistrationAPI, '/auth/register', endpoint='register')
+# login
 api.add_resource(LoginAPI, '/auth/login', endpoint='login')
+# bucketlists
 api.add_resource(BucketListsAPI, '/bucketlists/', endpoint='bucketlists')
+# bucketlist
 api.add_resource(BucketListAPI, '/bucketlists/<bucketlist_id>',
                  endpoint='bucketlist')
+# bucketlist items
 api.add_resource(BucketListItemsAPI,
-                 '/bucketlists/<bucketlist_id>/items/', endpoint='bucketlist-item')
+                 '/bucketlists/<bucketlist_id>/items/', endpoint='bucketlist-items')
+# bucketlist item
 api.add_resource(BucketListItemAPI,
-                 '/bucketlists/<bucketlist_id>/items/<item_id>', endpoint='bucketlist-items')
+                 '/bucketlists/<bucketlist_id>/items/<item_id>', endpoint='bucketlist-item')

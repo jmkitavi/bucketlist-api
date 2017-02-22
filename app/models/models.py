@@ -1,3 +1,4 @@
+""" app/models/models"""
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash

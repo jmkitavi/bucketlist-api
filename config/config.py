@@ -9,24 +9,24 @@ class Config(object):
     SECRET_KEY = "verynotsecret"
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres@localhost/bucketlist'
 
-class StagingConfig(Config):
+class Staging(Config):
     DEVELOPMENT = True
 
 
-class DevelopmentConfig(Config):
+class Development(Config):
     DEVELOPMENT = True
 
 
-class TestingConfig(Config):
+class Testing(Config):
     TESTING = True
     # sqlite database for testing
     # SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 configuration = {
-    'staging': StagingConfig,
-    'testing': TestingConfig,
-    'development': DevelopmentConfig,
-    'testing': TestingConfig,
+    'staging': Staging,
+    'testing': Testing,
+    'development': Development,
+    'testing': Testing,
     'default': Config,
     'SECRET_KEY': "SECRET_KEY"
 }

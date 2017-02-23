@@ -1,6 +1,6 @@
-import os
+#! /usr/bin/env python
 from flask_script import Manager
-from config.config import Config
+from app.config import Config
 from flask_migrate import Migrate, MigrateCommand
 from app import app, db
 

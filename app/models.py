@@ -12,8 +12,15 @@ class Users(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(200), nullable=False, unique=True)
-    email = db.Column(db.String(200), nullable=False, unique=True)
+    email = db.Column(db.String(200), nullable=True, unique=True)
     password = db.Column(db.String(50), nullable=False)
+
+    def __init__(self, username=None, email=None, password=None):
+        self.username = username
+        self.password = password
+
+    def __repr__(self):
+        return '<User %r>' % (self.name)
 
 
 class BucketList(db.Model):

@@ -7,7 +7,7 @@ class Config(object):
     DEBUG = True
     TESTING = False
     CSRF_ENABLED = True
-    SECRET_KEY = "verynotsecret"
+    SECRET_KEY = "verynotsecret" # change this to os environ
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres@localhost/bucketlist'
 
 class Staging(Config):
@@ -21,7 +21,7 @@ class Development(Config):
 class Testing(Config):
     TESTING = True
     # sqlite database for testing
-    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    # SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 configuration = {
     'staging': Staging,

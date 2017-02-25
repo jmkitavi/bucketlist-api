@@ -10,6 +10,7 @@ app = Flask(__name__)
 api = Api(app)
 
 app.config.from_object(configuration['default'])
+
 # this adds overhead so disabled
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -23,6 +24,7 @@ api.add_resource(RegistrationAPI, '/auth/register', endpoint='register')
 api.add_resource(LoginAPI, '/auth/login', endpoint='login')
 
 # view many bucketlists
+# create bucket list
 api.add_resource(BucketListsAPI, '/bucketlists/', endpoint='bucketlists')
 
 # view one bucketlist
@@ -30,6 +32,7 @@ api.add_resource(BucketListAPI, '/bucketlists/<bucketlist_id>',
                  endpoint='bucketlist')
 
 # view many bucketlist items
+# create BucketList item
 api.add_resource(BucketListItemsAPI,
                  '/bucketlists/<bucketlist_id>/items/', endpoint='bucketlist-items')
 

@@ -1,8 +1,24 @@
 """ app/bucketlists/views"""
-from flask import Flask
-from flask_restful import Api, Resource, reqparse
-from app.models import Users
-from app import db
+import json
+from flask import Flask, g, request
+from flask_restful import Resource, reqparse
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_httpauth import HTTPTokenAuth
+from app.models import Users, BucketList, BucketListItems
+from app import db, api, app
+from .config import configuration
+
+auth = HTTPTokenAuth(scheme='Token')
+
+
+@auth.verify_token
+def verify_token(token):
+    # authenticate by token
+    user = Users.verify_auth_token(token)
+    if not user:
+        return False
+    g.user = user
+    return True
 
 
 class RegistrationAPI(Resource):
@@ -26,6 +42,7 @@ class RegistrationAPI(Resource):
         if Users.query.filter_by(username=username).first() is not None:
             return {'message': 'user with that username already exists'}
         new_user = Users(username=username, password=password)
+        new_user.hash_password(password)
         db.session.add(new_user)
         db.session.commit()
         return {'message': '%s has been succesfully registered' % username}, 201
@@ -36,30 +53,46 @@ class LoginAPI(Resource):
             -login user"""
 
     def __init__(self):
-        pass
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('username', type=str, required=True,
+                                   help='username cannot be blank', location='json')
+        self.reqparse.add_argument('password', required=True,
+                                   help='password cannot be blank', location='json')
+        super(LoginAPI, self).__init__()
 
     def post(self):
-        """ Login User"""
-        pass
+        args = self.reqparse.parse_args()
+        username = args['username']
+        password = args['password']
+
+        # testing if a user details are correct
+        user = Users.query.filter_by(username=username).first()
+
+        # add checking hashed password
+        if user and user.verify_password(password):
+            token = user.generate_auth_token()
+            return {'Authorization': token.decode('ascii')}
+        return {'message': 'invalid username or password'}, 401
 
 
 class BucketListAPI(Resource):
     """ One bucket list
-            -create one
             -view one
             -update one
             -delete one"""
 
     def __init__(self):
-        pass
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('title', type=str, required=True,
+                                   help='Title can not be blank', location='json')
+        self.reqparse.add_argument('description', type=str)
+        self.reqparse.add_argument('title', type=str, required=True,
+                                   help='Title can not be blank', location='json')
 
-    def post(self):
-        """ New Bucketlist"""
-        return "Posting"
-
+    # @auth.login_required
     def get(self, bucketlist_id):
         """ View single bucketlist"""
-        pass
+        return {"message": "Posting"}
 
     def put(self, bucketlist_id):
         """ Update a bucketlist"""
@@ -72,11 +105,18 @@ class BucketListAPI(Resource):
 
 class BucketListsAPI(Resource):
     """ Many bucket list
-            -view them"""
+            -create one
+            -view many"""
 
     def __init__(self):
         pass
 
+    # @auth.login_required
+    def post(self):
+        """ New Bucketlist"""
+        pass
+
+    @auth.login_required
     def get(self):
         """ View many bucketlists"""
         pass

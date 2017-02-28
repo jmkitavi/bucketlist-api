@@ -28,7 +28,7 @@ api.add_resource(LoginAPI, '/auth/login', endpoint='login')
 api.add_resource(BucketListsAPI, '/bucketlists/', endpoint='bucketlists')
 
 # view one bucketlist
-api.add_resource(BucketListAPI, '/bucketlists/<bucketlist_id>',
+api.add_resource(BucketListAPI, '/bucketlists/<bucketlist_id>/',
                  endpoint='bucketlist')
 
 # view many bucketlist items

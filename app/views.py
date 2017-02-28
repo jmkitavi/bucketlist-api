@@ -89,6 +89,14 @@ class LoginAPI(Resource):
         # status code - unauthorised, login failed
 
 
+format_item = {
+    'item_id': fields.Integer,
+    'item_name': fields.String,
+    'date_created': fields.DateTime,
+    'date_modified': fields.DateTime,
+    'bucketlist_id': fields.Integer,
+    'status': fields.Boolean
+}
 format_bucketlist = {
     'bucketlist_id': fields.Integer,
     'title': fields.String,
@@ -96,14 +104,7 @@ format_bucketlist = {
     'date_created': fields.DateTime,
     'date_modified': fields.DateTime,
     'created_by': fields.Integer,
-}
-format_item = {
-    'item_id': fields.Integer,
-    'item_name': fields.String,
-    'date_created': fields.DateTime,
-    'date_modified': fields.DateTime,
-    'bucket_id': fields.Integer,
-    'status': fields.Boolean
+    'items': fields.Nested(format_item),
 }
 
 
@@ -217,43 +218,136 @@ class BucketListsAPI(Resource):
 
 
 class BucketListItemsAPI(Resource):
-    """ Many bucketlist item
-            -view item"""
+    """ Create new bucket list item
+        viewing many handled in get BucketList"""
 
     decorators = [auth.login_required]
-
-    def __init__(self):
-        pass
-
     def get(self, bucketlist_id):
-        """ View many bucketlist items"""
-        pass
+        bucketlist = BucketList.query.filter_by(bucketlist_id=bucketlist_id).first()
+        if not bucketlist:
+            return {'error': "BucketList with ID {} not found.".format(bucketlist_id)}, 404
+            # status code - not found
+        bucketlistitems = BucketListItems.query.filter_by(bucketlist_id=bucketlist_id).all()
+        if not bucketlistitems:
+            return {'message': "No Items created yet"}
+        return {'items': marshal(bucketlistitems, format_item)}
+
+    def post(self, bucketlist_id):
+        """ New Bucketlist Item"""
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('item_name', type=str, required=True,
+                                   help="Item name can't be blank", location='json')
+        self.reqparse.add_argument('status', type=bool, location='json')
+
+        args = self.reqparse.parse_args()
+        item_name = args['item_name']
+        status = args['status']
+        user_id = g.user.user_id
+
+        # check if title is null
+        if item_name == "":
+            return {'error': "Item Name can't be empty"}, 400
+            # status code - Bad request
+
+        if BucketList.query.filter_by(bucketlist_id=bucketlist_id).first() is None:
+            return {'error':'BucketList ID {} not found.'.format(bucketlist_id)}, 404
+            # status code - Not found
+
+        # check if item name exists in bucketlist
+        if BucketListItems.query.filter_by(item_name=item_name,
+                                           bucketlist_id=bucketlist_id).first() is not None:
+            return {'error': 'BucketList {} already has item with name {}'.format(
+                bucketlist_id, item_name)}, 202
+            #  status code - request accepted but not processed
+
+        bucketlist_item = BucketListItems(
+            item_name=item_name, bucketlist_id=bucketlist_id, status=status)
+        db.session.add(bucketlist_item)
+        db.session.commit()
+        return {'message': '{} - item has been added succesfully to {} bucketlist'.format(
+            item_name, bucketlist_id)}, 201
+        # status code - created new resource
 
 
 class BucketListItemAPI(Resource):
     """ One bucketlist item
-            -add new item
             -view item
             -edit item
             -delete item"""
 
     decorators = [auth.login_required]
 
-    def __init__(self):
-        pass
-
-    def post(self):
-        """ New bucket list item"""
-        pass
-
     def get(self, bucketlist_id, item_id):
         """ view bucketlist item"""
-        pass
+
+        # check if bucketlist exists
+        bucketlist = BucketList.query.filter_by(bucketlist_id=bucketlist_id).first()
+        if not bucketlist:
+            return {'error': "BucketList with ID {} not found.".format(bucketlist_id)}, 404
+            # status code - not found
+
+        bucketlistitem = BucketListItems.query.filter_by(
+            bucketlist_id=bucketlist_id, item_id=item_id).first()
+
+        # check if theres a bucketlist item
+        if bucketlistitem:
+            return marshal(bucketlistitem, format_item), 200
+            # status code - ok
+
+        return {'error': "BucketListItem with ID {} not found.".format(item_id)}, 404
+        # status code - not found
 
     def put(self, bucketlist_id, item_id):
         """ Update bucketlist item"""
-        pass
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('item_name', type=str, required=True,
+                                   help="Item name can't be blank", location='json')
+        self.reqparse.add_argument('status', type=bool, location='json')
+
+        args = self.reqparse.parse_args()
+        user_id = g.user.user_id
+
+        # check if bucketlist exists
+        bucketlist = BucketList.query.filter_by(bucketlist_id=bucketlist_id).first()
+        if not bucketlist:
+            return {'error': "BucketList with ID {} not found.".format(bucketlist_id)}, 404
+            # status code - not found
+
+        bucketlistitem = BucketListItems.query.filter_by(
+            bucketlist_id=bucketlist_id, item_id=item_id).first()
+
+        # check if theres a bucketlist item
+        if not bucketlistitem:
+            return {'error': 'BucketListItem with ID {} not found.'.format(item_id)}, 404
+            # status code - not found
+
+        if args.item_name:
+            bucketlistitem.item_name = args.item_name
+        if args.status:
+            bucketlistitem.status = args.status
+        db.session.commit()
+        return {'message': 'BucketListItem with ID {} was updated.'.format(item_id)}
+
+
 
     def delete(self, bucketlist_id, item_id):
         """ Delete bucketlist item"""
-        pass
+        # check if theres a bucketlist
+        bucketlist = BucketList.query.filter_by(
+            bucketlist_id=bucketlist_id).first()
+        if not bucketlist:
+            return {'error': "BucketList with id {} not found.".format(bucketlist_id)}, 404
+
+
+        # check if theres a bucketlistitem
+        bucketlistitem = BucketListItems.query.filter_by(
+            bucketlist_id=bucketlist_id, item_id=item_id).first()
+
+        if not bucketlistitem:
+            return {'error': "BucketListItem with id {} not found.".format(item_id)}, 404
+
+        db.session.delete(bucketlistitem)
+        db.session.commit()
+        return {'message': 'BucketListItem with ID {} was deleted'.format(item_id)}
+            # 204 status code - request processed, no content returned
+

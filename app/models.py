@@ -1,11 +1,12 @@
 """ app/models/models"""
 import datetime
 from sqlalchemy.sql import func
-from werkzeug.security import generate_password_hash, check_password_hash # for hashing password
+# for hashing password
+from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import (TimedJSONWebSignatureSerializer
-                          as Serializer, BadSignature, SignatureExpired) # for creatin tokens
+                          as Serializer, BadSignature, SignatureExpired)  # for creating tokens
 from app import db, app
-from .config import configuration # to import secret key
+from .config import configuration  # to import secret key
 
 
 class Users(db.Model):
@@ -13,7 +14,6 @@ class Users(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(200), nullable=False, unique=True)
     password_hash = db.Column(db.String(128), nullable=False)
-
 
     def __init__(self, username, password):
         self.username = username
@@ -24,7 +24,6 @@ class Users(db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
-
 
     def generate_auth_token(self, expiration=100000):
         s = Serializer(configuration['SECRET_KEY'], expires_in=expiration)
@@ -55,7 +54,10 @@ class BucketList(db.Model):
     date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
                               onupdate=db.func.current_timestamp())
     created_by = db.Column(db.Integer, db.ForeignKey(
-        "users.user_id"), nullable=False)
+        "users.user_id", ondelete='CASCADE'), nullable=False)
+    items = db.relationship('BucketListItems',
+                            backref='bucketlist',
+                            passive_deletes=True)
 
 
 class BucketListItems(db.Model):
@@ -65,6 +67,6 @@ class BucketListItems(db.Model):
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
                               onupdate=db.func.current_timestamp())
-    bucket_id = db.Column(db.Integer, db.ForeignKey(
-        "bucketlist.bucketlist_id"), nullable=False)
-    status = db.Column(db.Boolean, nullable=False)
+    bucketlist_id = db.Column(db.Integer, db.ForeignKey(
+        "bucketlist.bucketlist_id", ondelete='CASCADE'), nullable=False)
+    status = db.Column(db.Boolean, nullable=False, default=False)

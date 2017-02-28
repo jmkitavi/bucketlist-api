@@ -21,7 +21,7 @@ class Development(Config):
 class Testing(Config):
     TESTING = True
     # sqlite database for testing
-    # SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 configuration = {
     'staging': Staging,

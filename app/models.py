@@ -69,4 +69,5 @@ class BucketListItems(db.Model):
                               onupdate=db.func.current_timestamp())
     bucketlist_id = db.Column(db.Integer, db.ForeignKey(
         "bucketlist.bucketlist_id", ondelete='CASCADE'), nullable=False)
+    # status of done
     status = db.Column(db.Boolean, nullable=False, default=False)

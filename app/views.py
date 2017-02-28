@@ -246,7 +246,7 @@ class BucketListItemsAPI(Resource):
 
         # check if title is null
         if item_name == "":
-            return {'error': "Item Name can't be empty"}, 400
+            return {'error': "Item Name can't be empty."}, 400
             # status code - Bad request
 
         if BucketList.query.filter_by(bucketlist_id=bucketlist_id).first() is None:

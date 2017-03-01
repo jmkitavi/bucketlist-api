@@ -85,7 +85,7 @@ class LoginAPI(Resource):
             token = user.generate_auth_token()
             return {'Authorization': token.decode('ascii')}
 
-        return {'message': 'invalid username or password'}, 401
+        return {'error': 'invalid username or password'}, 401
         # status code - unauthorised, login failed
 
 

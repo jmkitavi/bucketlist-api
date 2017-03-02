@@ -143,14 +143,14 @@ class BucketListAPI(Resource):
                                                 created_by=user_id).first()
 
         if not bucketlist:
-            return {'message': 'Bucketlist with %s id not found' % bucketlist_id}, 404
+            return {'error': 'Bucketlist with id {} not found'.format(bucketlist_id)}, 404
 
         if args.title:
             bucketlist.title = args.title
         if args.description:
             bucketlist.description = args.description
         db.session.commit()
-        return {'message': 'The bucketlist with ID %s was updated' % bucketlist_id}
+        return {'message': 'The bucketlist with id {} was updated'.format(bucketlist_id)}
 
     def delete(self, bucketlist_id):
         """ Delete a bucketlist"""
@@ -196,7 +196,7 @@ class BucketListsAPI(Resource):
 
         # testing if a bucketlist exists
         if BucketList.query.filter_by(title=title).first() is not None:
-            return {'message': 'BucketList with that name already exists'}, 202
+            return {'message': 'BucketList - {} already exists'.format(title)}, 202
             #  status code - request accepted but not processed
 
         bucketlist = BucketList(

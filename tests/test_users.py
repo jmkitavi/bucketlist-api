@@ -1,6 +1,5 @@
 """ tests/test_users"""
 from .test_setup import BaseTest
-# from app.models import Users
 import json
 
 
@@ -61,7 +60,7 @@ class UserTest(BaseTest):
 
     def test_bad_registration(self):
         """ Test bad request when registering"""
-        
+
         user = {"username": "", "password": "password"}
         response = self.client.post(
             '/auth/register', data=json.dumps(user), content_type='application/json')

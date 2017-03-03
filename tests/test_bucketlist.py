@@ -64,7 +64,15 @@ class TestBucketList(BaseTest):
 
     def test_update_bucketlist(self):
         """ Test updating bucketlist."""
-        pass
+        bucketlist = {'title': 'Swimming'}
+        bucketlist_update = {'title': 'Driving', 'description':'Widow killer'}
+        self.client.post('/bucketlists/', data=json.dumps(bucketlist), headers=self.get_header())
+        response = self.client.put(
+            '/bucketlists/1', data=json.dumps(bucketlist_update), headers=self.get_header())
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.get_data(as_text=True))
+        self.assertIn("Bucketlist with id 1 was updated",
+                      response_data['message'])
 
     def test_update_missing_bucketlist(self):
         """ Test missing bucketlist."""
@@ -73,13 +81,23 @@ class TestBucketList(BaseTest):
             '/bucketlists/1', data=json.dumps(bucketlist), headers=self.get_header())
         self.assertEqual(response.status_code, 404)
         response_data = json.loads(response.get_data(as_text=True))
-        self.assertIn("Bucket",
+        self.assertIn("Bucketlist with id 1 not found",
                       response_data['error'])
 
     def test_delete_bucketlist(self):
         """ Test deleting bucketlist."""
-        pass
+        bucketlist = {'title': 'Swimming'}
+        response = self.client.post(
+            '/bucketlists/', data=json.dumps(bucketlist), headers=self.get_header())
+        response = self.client.delete(
+            '/bucketlists/1', headers=self.get_header())
+        self.assertEqual(response.status_code, 200)
 
     def test_delete_missing_bucketlist(self):
         """ Test missing bucketlist."""
-        pass
+        response = self.client.delete(
+            '/bucketlists/1', headers=self.get_header())
+        self.assertEqual(response.status_code, 404)
+        response_data = json.loads(response.get_data(as_text=True))
+        self.assertIn("Bucketlist with id 1 not found",
+                      response_data['error'])

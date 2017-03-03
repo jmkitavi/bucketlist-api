@@ -27,15 +27,15 @@ def seed():
     users = []
     bucketlists = []
     bucketlist_items = []
-    
+
     # create 10 users
     print('\tCreating users...')
     for i in range(10):
-        users.append(Users(fake.first_name(), 'password'))
+        users.append(Users(fake.first_name(), password='password'))
     db.session.bulk_save_objects(users)
     db.session.commit()
     print('\tCreating users complete!')
-    
+
     # create BucketLists
     countries = []
     for i in range(100):
@@ -45,7 +45,7 @@ def seed():
     db.session.bulk_save_objects(bucketlists)
     db.session.commit()
     print('\tCreating bucketlist items complete!')
-    
+
     # create BucketListItem
     names = []
     for i in range(100):

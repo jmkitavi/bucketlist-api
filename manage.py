@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-import os
 from random import randint
 from flask_script import Manager
 from app.config import Config
@@ -16,7 +15,6 @@ migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
 
 fake = Faker()
-
 
 @manager.command
 def seed():
@@ -40,7 +38,7 @@ def seed():
     countries = []
     for i in range(100):
         countries.append(fake.country())
-    bucketlists = [BucketList(title=country, created_by=randint(1, 9))
+    bucketlists = [BucketList(title=country, created_by=(1, 21))
                    for country in set(countries)]
     db.session.bulk_save_objects(bucketlists)
     db.session.commit()
@@ -48,10 +46,10 @@ def seed():
 
     # create BucketListItem
     names = []
-    for i in range(100):
+    for i in range(1000):
         names.append(fake.name())
     bucketlist_items = [BucketListItems(
-        item_name=name, bucketlist_id=randint(55, 139)) for name in set(names)]
+        item_name=name, bucketlist_id=randint(88, 168)) for name in set(names)]
     db.session.bulk_save_objects(bucketlist_items)
     db.session.commit()
     print('\tCreating bucketlist items complete!')

@@ -40,7 +40,7 @@ class UserTest(BaseTest):
     def test_new_registration(self):
         """ Creating a new user."""
 
-        user = {"username": "joseph", "password":"password"}
+        user = {"username": "joseph", "password": "password"}
         response = self.client.post(
             'auth/register', data=json.dumps(user), content_type='application/json')
         self.assertEqual(response.status_code, 201)
@@ -69,3 +69,5 @@ class UserTest(BaseTest):
         self.assertIn("Username or Password can't be empty",
                       response_data['error'])
 
+    def test_expired_token(self):
+        pass

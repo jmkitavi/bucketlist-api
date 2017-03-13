@@ -48,7 +48,7 @@ class Users(db.Model):
 class BucketList(db.Model):
     __tablename__ = "bucketlist"
     bucketlist_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(200), nullable=False, unique=True)
+    title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.String)
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
@@ -63,7 +63,7 @@ class BucketList(db.Model):
 class BucketListItems(db.Model):
     __tablename__ = "bucketlistitems"
     item_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    item_name = db.Column(db.String(200), nullable=False, unique=True)
+    item_name = db.Column(db.String(200), nullable=False)
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
                               onupdate=db.func.current_timestamp())

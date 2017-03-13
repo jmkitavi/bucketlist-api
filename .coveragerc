@@ -21,3 +21,26 @@ omit =
     *stringprep*
     *mime*
     *numbers*
+[report]
+omit = 
+    *werkzeug*
+    *flask*
+    *click*
+    *jinja*
+    *ctypes*
+    *aniso8601*
+    *sqlalchemy*
+    *sqlite3*
+    *dateutil*
+    *pytz*
+    *itsdangerous*
+    *mark*
+    *decimal*
+    *encoding*
+    *html*
+    *http*
+    *uuid*
+    *hmac*
+    *stringprep*
+    *mime*
+    *numbers*

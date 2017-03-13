@@ -1,6 +1,6 @@
 [run]
 omit = 
-    */.virtual*
+    *virtual*
     *werkzeug*
     *flask*
     *click*
@@ -24,7 +24,31 @@ omit =
     *numbers*
 [report]
 omit = 
-    */.virtual*
+    *virtual*
+    *werkzeug*
+    *flask*
+    *click*
+    *jinja*
+    *ctypes*
+    *aniso8601*
+    *sqlalchemy*
+    *sqlite3*
+    *dateutil*
+    *pytz*
+    *itsdangerous*
+    *mark*
+    *decimal*
+    *encoding*
+    *html*
+    *http*
+    *uuid*
+    *hmac*
+    *stringprep*
+    *mime*
+    *numbers*
+[post]
+omit = 
+    *virtual*
     *werkzeug*
     *flask*
     *click*

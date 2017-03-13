@@ -1,5 +1,6 @@
 [run]
 omit = 
+    */.virtual*
     *werkzeug*
     *flask*
     *click*
@@ -23,6 +24,7 @@ omit =
     *numbers*
 [report]
 omit = 
+    */.virtual*
     *werkzeug*
     *flask*
     *click*

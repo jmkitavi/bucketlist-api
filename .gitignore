@@ -7,3 +7,4 @@
 .coverage
 *tags*
 *migrations*
+*cover/*

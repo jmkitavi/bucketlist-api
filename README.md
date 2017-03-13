@@ -1,0 +1,1 @@
+[![Coverage Status](https://coveralls.io/repos/github/sirjmkitavi/cp2-bucketlist/badge.svg?branch=develop)](https://coveralls.io/github/sirjmkitavi/cp2-bucketlist?branch=develop)

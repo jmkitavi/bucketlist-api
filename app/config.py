@@ -7,8 +7,9 @@ class Config(object):
     DEBUG = True
     TESTING = False
     CSRF_ENABLED = True
-    SECRET_KEY =os.getenv('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres@localhost/bucketlist'
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DB_URL')
+
 
 class Staging(Config):
     DEVELOPMENT = True
@@ -28,5 +29,5 @@ configuration = {
     'testing': Testing,
     'development': Development,
     'default': Config,
-    'SECRET_KEY': "SECRET_KEY"
+    'SECRET_KEY': 'SECRET_KEY'
 }

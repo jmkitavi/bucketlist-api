@@ -8,6 +8,7 @@ from .config import configuration  # to import secret key
 
 
 class Users(db.Model):
+    """ Database Models for Users"""
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(200), nullable=False, unique=True)
@@ -44,6 +45,7 @@ class Users(db.Model):
 
 
 class BucketList(db.Model):
+    """ Database Models for BucketList"""
     __tablename__ = "bucketlist"
     bucketlist_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(200), nullable=False)
@@ -59,6 +61,7 @@ class BucketList(db.Model):
 
 
 class BucketListItems(db.Model):
+    """ Database Models for BucketList Items"""
     __tablename__ = "bucketlistitems"
     item_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     item_name = db.Column(db.String(200), nullable=False)

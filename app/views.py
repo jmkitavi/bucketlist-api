@@ -1,5 +1,5 @@
 """ app/bucketlists/views"""
-from flask import Flask, g
+from flask import g
 from flask_restful import Resource, reqparse, marshal, fields
 from flask_httpauth import HTTPTokenAuth
 from app.models import Users, BucketList, BucketListItems
@@ -106,11 +106,11 @@ format_bucketlist = {
 
 
 class BucketListAPI(Resource):
-    decorators = [auth.login_required]
     """ One bucket list
             -view one
             -update one
             -delete one"""
+    decorators = [auth.login_required]
 
     def get(self, bucketlist_id):
         """ View single bucketlist"""
@@ -203,8 +203,6 @@ class BucketListsAPI(Resource):
             title, g.user.username)}, 201
         # status code - created new resource
 
-    # add pagination
-    # add search by name
     def get(self):
         """ View many bucketlists"""
         self.reqparse = reqparse.RequestParser()

@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-import os
 from random import randint
 from flask_script import Manager
 from app.config import Config

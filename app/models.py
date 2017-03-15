@@ -1,11 +1,9 @@
 """ app/models/models"""
-import datetime		
-from sqlalchemy.sql import func
 # for hashing password
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)  # for creating tokens
-from app import db, app
+from app import db
 from .config import configuration  # to import secret key
 
 

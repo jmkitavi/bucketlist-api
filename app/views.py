@@ -1,12 +1,10 @@
 """ app/bucketlists/views"""
-import json
-from flask import Flask, g, request, json
-from flask_restful import Api, Resource, reqparse, marshal, fields
+from flask import Flask, g, json
+from flask_restful import Resource, reqparse, marshal, fields
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_httpauth import HTTPTokenAuth
 from app.models import Users, BucketList, BucketListItems
-from app import db, api, app
-from .config import configuration
+from app import db, api
 
 auth = HTTPTokenAuth(scheme='Token')
 

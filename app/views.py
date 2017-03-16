@@ -37,20 +37,23 @@ class RegistrationAPI(Resource):
 
         # checking if parameters are null
         if password == "" or username == "":
-            return {'error': "Username or Password can't be empty"}, 400
+
             #  status code - Bad request
+            return {'error': "Username or Password can't be empty"}, 400
 
         # testing if a user exists
         if Users.query.filter_by(username=username).first() is not None:
-            return {'message': 'user with that username already exists'}, 202
+
             #  status code - request accepted but not processed
+            return {'message': 'user with that username already exists'}, 202
 
         new_user = Users(username=username, password=password)
         new_user.hash_password(password)
         db.session.add(new_user)
         db.session.commit()
-        return {'message': '%s has been succesfully registered' % username}, 201
+
         # status code - created new resource
+        return {'message': '%s has been succesfully registered' % username}, 201
 
 
 class LoginAPI(Resource):
@@ -72,8 +75,9 @@ class LoginAPI(Resource):
 
         # checking if parameters are null
         if password == "" or username == "":
-            return {'error': "Username or Password can't be empty"}, 400
+
             #  status code - Bad request
+            return {'error': "Username or Password can't be empty"}, 400
 
         # getting user details
         user = Users.query.filter_by(username=username).first()
@@ -82,8 +86,8 @@ class LoginAPI(Resource):
             token = user.generate_auth_token()
             return {'Authorization': token.decode('ascii')}
 
-        return {'error': 'invalid username or password'}, 401
         # status code - unauthorised, login failed
+        return {'error': 'invalid username or password'}, 401
 
 
 format_item = {
@@ -120,11 +124,10 @@ class BucketListAPI(Resource):
 
         # check if theres a bucketlist
         if bucketlist:
-            return marshal(bucketlist, format_bucketlist), 200
             # status code - ok
-
-        return {'error': "BucketList with id {} not found.".format(bucketlist_id)}, 404
+            return marshal(bucketlist, format_bucketlist), 200
         # status code - not found
+        return {'error': "BucketList with id {} not found.".format(bucketlist_id)}, 404
 
     def put(self, bucketlist_id):
         """ Update a bucketlist"""
@@ -159,9 +162,8 @@ class BucketListAPI(Resource):
         if bucketlist:
             db.session.delete(bucketlist)
             db.session.commit()
-            # 204
+            # status code 204 - request processed, no content returned
             return {'message': 'The bucketlist with ID %s was deleted' % bucketlist_id}
-            # status code - request processed, no content returned
 
         return {'error': "Bucketlist with id {} not found.".format(bucketlist_id)}, 404
         # status code - not found
@@ -187,21 +189,23 @@ class BucketListsAPI(Resource):
 
         # check if title is null
         if title == "":
-            return {'error': "Title can't be empty"}, 400
             # status code - Bad request
+            return {'error': "Title can't be empty"}, 400
 
         # testing if a bucketlist exists
         if BucketList.query.filter_by(title=title, created_by=user_id).first() is not None:
-            return {'message': 'BucketList - {} already exists'.format(title)}, 202
+
             #  status code - request accepted but not processed
+            return {'message': 'BucketList - {} already exists'.format(title)}, 202
 
         bucketlist = BucketList(
             title=title, description=description, created_by=user_id)
         db.session.add(bucketlist)
         db.session.commit()
+
+        # status code - created new resource
         return {'message': '{} - bucketlist has been added succesfully by {}'.format(
             title, g.user.username)}, 201
-        # status code - created new resource
 
     def get(self):
         """ View many bucketlists"""
@@ -258,8 +262,8 @@ class BucketListItemsAPI(Resource):
         bucketlist = BucketList.query.filter_by(
             bucketlist_id=bucketlist_id).first()
         if not bucketlist:
-            return {'error': "BucketList with id {} not found.".format(bucketlist_id)}, 404
             # status code - not found
+            return {'error': "BucketList with id {} not found.".format(bucketlist_id)}, 404
         bucketlistitems = BucketListItems.query.filter_by(
             bucketlist_id=bucketlist_id).all()
         if not bucketlistitems:
@@ -280,27 +284,27 @@ class BucketListItemsAPI(Resource):
 
         # check if title is null
         if item_name == "":
-            return {'error': "Item Name can't be empty."}, 400
             # status code - Bad request
+            return {'error': "Item Name can't be empty."}, 400
 
         if BucketList.query.filter_by(bucketlist_id=bucketlist_id).first() is None:
-            return {'error': 'BucketList ID {} not found.'.format(bucketlist_id)}, 404
             # status code - Not found
+            return {'error': 'BucketList ID {} not found.'.format(bucketlist_id)}, 404
 
         # check if item name exists in bucketlist
         if BucketListItems.query.filter_by(item_name=item_name,
                                            bucketlist_id=bucketlist_id).first() is not None:
+            #  status code - request accepted but not processed
             return {'error': 'BucketList {} already has item with name {}'.format(
                 bucketlist_id, item_name)}, 202
-            #  status code - request accepted but not processed
 
         bucketlist_item = BucketListItems(
             item_name=item_name, bucketlist_id=bucketlist_id, status=status)
         db.session.add(bucketlist_item)
         db.session.commit()
+        # status code - created new resource
         return {'message': '{} - item has been added succesfully to bucketlist - {}'.format(
             item_name, bucketlist_id)}, 201
-        # status code - created new resource
 
 
 class BucketListItemAPI(Resource):
@@ -318,19 +322,19 @@ class BucketListItemAPI(Resource):
         bucketlist = BucketList.query.filter_by(
             bucketlist_id=bucketlist_id).first()
         if not bucketlist:
-            return {'error': "BucketList with id {} not found.".format(bucketlist_id)}, 404
             # status code - not found
+            return {'error': "BucketList with id {} not found.".format(bucketlist_id)}, 404
 
         bucketlistitem = BucketListItems.query.filter_by(
             bucketlist_id=bucketlist_id, item_id=item_id).first()
 
         # check if theres a bucketlist item
         if bucketlistitem:
-            return marshal(bucketlistitem, format_item), 200
             # status code - ok
+            return marshal(bucketlistitem, format_item), 200
 
-        return {'error': "BucketListItem with id {} not found.".format(item_id)}, 404
         # status code - not found
+        return {'error': "BucketListItem with id {} not found.".format(item_id)}, 404
 
     def put(self, bucketlist_id, item_id):
         """ Update bucketlist item"""
@@ -346,16 +350,16 @@ class BucketListItemAPI(Resource):
         bucketlist = BucketList.query.filter_by(
             bucketlist_id=bucketlist_id).first()
         if not bucketlist:
-            return {'error': "BucketList with id {} not found.".format(bucketlist_id)}, 404
             # status code - not found
+            return {'error': "BucketList with id {} not found.".format(bucketlist_id)}, 404
 
         bucketlistitem = BucketListItems.query.filter_by(
             bucketlist_id=bucketlist_id, item_id=item_id).first()
 
         # check if theres a bucketlist item
         if not bucketlistitem:
-            return {'error': 'BucketListItem with id {} not found.'.format(item_id)}, 404
             # status code - not found
+            return {'error': 'BucketListItem with id {} not found.'.format(item_id)}, 404
 
         if args.item_name:
             bucketlistitem.item_name = args.item_name
@@ -381,5 +385,5 @@ class BucketListItemAPI(Resource):
 
         db.session.delete(bucketlistitem)
         db.session.commit()
-        return {'message': 'BucketListItem with id {} was deleted'.format(item_id)}, 200
         # 204 status code - request processed, no content returned
+        return {'message': 'BucketListItem with id {} was deleted'.format(item_id)}, 200

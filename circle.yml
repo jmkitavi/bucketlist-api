@@ -4,7 +4,6 @@ machine:
 
 dependencies:
     override:
-        - export SECRET_KEY="\xffI\x9b\xb4\x147\n\x88y+2\xeef\xd1\x1d\xae\xa8\xfa\xdf\xb7"
         - pip install -r requirements.txt
 test:
     override:

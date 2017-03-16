@@ -246,7 +246,9 @@ class BucketListsAPI(Resource):
         bucketlists = bucketlists.items
 
         response = {'bucketlists': marshal(bucketlists, format_bucketlist),
-                    'pages': total
+                    'pages': total,
+                    'url':"http://address/bucketlists/?page=",
+                    'search':"http://address/bucketlists/?q="
                    }
         return response
 

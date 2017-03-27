@@ -4,10 +4,22 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 import os
 from .config import configuration
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
+
 api = Api(app)
+
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    response.headers.add('Access-Control-Allow-Methods',
+                         'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
 
 app.config.from_object(configuration['default'])
 

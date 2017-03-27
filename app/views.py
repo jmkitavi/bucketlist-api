@@ -5,6 +5,7 @@ from flask_httpauth import HTTPTokenAuth
 from app.models import Users, BucketList, BucketListItems
 from app import db
 
+
 auth = HTTPTokenAuth(scheme='Token')
 
 
@@ -210,8 +211,10 @@ class BucketListsAPI(Resource):
     def get(self):
         """ View many bucketlists"""
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('page', location="args", type=int, required=False, default=1)
-        self.reqparse.add_argument('limit', location="args", type=int, required=False, default=20)
+        self.reqparse.add_argument(
+            'page', location="args", type=int, required=False, default=1)
+        self.reqparse.add_argument(
+            'limit', location="args", type=int, required=False, default=20)
         self.reqparse.add_argument('q', location="args", required=False)
 
         user_id = g.user.user_id
@@ -232,7 +235,7 @@ class BucketListsAPI(Resource):
                 bucketlists = bucketlists.items
                 response = {'bucketlists': marshal(bucketlists, format_bucketlist),
                             'pages': total
-                           }
+                            }
                 return response
             else:
                 return {'message': "Bucketlist with {} not found".format(search_word)}, 404
@@ -247,9 +250,9 @@ class BucketListsAPI(Resource):
 
         response = {'bucketlists': marshal(bucketlists, format_bucketlist),
                     'pages': total,
-                    'url':"http://address/bucketlists/?page=",
-                    'search':"http://address/bucketlists/?q="
-                   }
+                    'url': "http://address/bucketlists/?page=",
+                    'search': "http://address/bucketlists/?q="
+                    }
         return response
 
 

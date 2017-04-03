@@ -73,6 +73,8 @@ class LoginAPI(Resource):
         args = self.reqparse.parse_args()
         username = args['username']
         password = args['password']
+        print(username + " " + password)
+        print(args)
 
         # checking if parameters are null
         if password == "" or username == "":
@@ -85,7 +87,7 @@ class LoginAPI(Resource):
         # add checking hashed password
         if user and user.verify_password(password):
             token = user.generate_auth_token()
-            return {'Authorization': token.decode('ascii')}
+            return {'Authorization': "token " + token.decode('ascii')}
 
         # status code - unauthorised, login failed
         return {'error': 'invalid username or password'}, 401
@@ -106,7 +108,7 @@ format_bucketlist = {
     'date_created': fields.DateTime,
     'date_modified': fields.DateTime,
     'created_by': fields.Integer,
-    # 'items': fields.Nested(format_item),
+    'items': fields.Nested(format_item),
 }
 
 

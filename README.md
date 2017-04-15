@@ -6,7 +6,7 @@
 
 ## Introduction
 
-> This application is a Flask API for a bucket list service that allows users to create, update and delete bucket lists. It also provides programmatic access to the items added to the items created. This API is a REST API and the return format for all endpoints is JSON.
+> This application is a Flask REST API for a bucket list service that allows users to create, update and delete bucket lists.
 
 ## Endpoints
 

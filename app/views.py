@@ -87,7 +87,7 @@ class LoginAPI(Resource):
         # add checking hashed password
         if user and user.verify_password(password):
             token = user.generate_auth_token()
-            return {'Authorization': "token " + token.decode('ascii')}
+            return {'Authorization': token.decode('ascii')}
 
         # status code - unauthorised, login failed
         return {'error': 'invalid username or password'}, 401

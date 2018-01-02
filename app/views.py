@@ -40,13 +40,13 @@ class RegistrationAPI(Resource):
         if password == "" or username == "":
 
             #  status code - Bad request
-            return {'error': "Username or Password can't be empty"}, 400
+            return {'error': "Username or Password can't be empty"}, 200
 
         # testing if a user exists
         if Users.query.filter_by(username=username).first() is not None:
 
             #  status code - request accepted but not processed
-            return {'message': 'user with that username already exists'}, 202
+            return {'error': 'User with that Username already exists'}, 202
 
         new_user = Users(username=username, password=password)
         new_user.hash_password(password)
@@ -214,9 +214,9 @@ class BucketListsAPI(Resource):
         """ View many bucketlists"""
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
-            'page', location="args", type=int, required=False, default=1)
+            'page', location="args", type=int, required=False, default=2)
         self.reqparse.add_argument(
-            'limit', location="args", type=int, required=False, default=20)
+            'limit', location="args", type=int, required=False, default=99)
         self.reqparse.add_argument('q', location="args", required=False)
 
         user_id = g.user.user_id

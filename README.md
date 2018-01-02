@@ -42,9 +42,9 @@
 
  ## Perform migrations
 ```
-python server.py db init
-python server.py db migrate
-python server.py db upgrade
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
 
 
 ## Testing
@@ -52,3 +52,5 @@ To run the tests for the app, and see the coverage, run
 ```
 nosetests --with-coverage
 ```
+
+Damn It This READMe needs some work.
